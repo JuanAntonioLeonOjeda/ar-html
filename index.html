@@ -9,7 +9,13 @@
   <script type='text/javascript' src='https://raw.githack.com/AR-js-org/AR.js/3.4.5/aframe/build/aframe-ar.js'></script>
 </head>
 
-<body style="margin: 0; overflow: hidden;">
+<a-scene vr-mode-ui='enabled: false' arjs='sourceType: webcam; videoTexture: true; debugUIEnabled: false'
+  renderer='antialias: true; alpha: true'>
+  <a-camera gps-new-camera='gpsMinDistance: 5'></a-camera>
+  <a-entity material='color: red' geometry='primitive: box'
+    gps-new-entity-place="latitude: 28.1271824; longitude: -15.4412337" scale="10 10 10"></a-entity>
+</a-scene>
+<!-- <body style="margin: 0; overflow: hidden;">
   <a-scene vr-mode-ui="enabled: false" renderer="antialias: true; alpha: true"
     arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false">
     <a-camera gps-new-camera="gpsMinDistance: 5"></a-camera>
@@ -31,7 +37,7 @@
 
       scene.appendChild(box)
     })
-  </script>
+  </script> -->
 </body>
 
 </html>
