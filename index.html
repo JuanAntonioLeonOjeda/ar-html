@@ -28,25 +28,70 @@
   <div class="arjs-loader">
     <div>Loading, please wait...</div>
   </div>
+  <a-assets>
+    <audio id="rugido" src="/audio/rugido.mp3" preload="auto"></audio>
+  </a-assets>
   <a-scene vr-mode-ui="enabled: false;" renderer="logarithmicDepthBuffer: true;" embedded
     arjs="trackingMethod: best; sourceType: webcam;debugUIEnabled: false;">
-    <!-- we use cors proxy to avoid cross-origin problems -->
-
-    <!--
-      ⚠️⚠️⚠️
-      https://arjs-cors-proxy.herokuapp.com/ is now offline, Heroku has dismissed all his free plans from November 2022.
-      You need to host your own proxy and use it instead. The proxy is based on CORS Anywhere (see https://github.com/Rob--W/cors-anywhere).
-      ⚠️⚠️⚠️
-    -->
-
     <a-nft type="nft"
       url="https://raw.githack.com/AR-js-org/AR.js/master/aframe/examples/image-tracking/nft/trex/trex-image/trex"
       smooth="true" smoothCount="10" smoothTolerance=".01" smoothThreshold="5">
       <a-entity
         gltf-model="https://raw.githack.com/AR-js-org/AR.js/master/aframe/examples/image-tracking/nft/trex/scene.gltf"
-        scale="5 5 5" position="0 0 0">
+        scale="5 5 5" position="0 0 0" drag-rotate-component>
       </a-entity>
+      <a-plane position="0 -0.5 0" width="1" height="0.3" color="#FFC107" class="clickable" id="audio-button" visible="false">
+        <a-text value="🔊 Escuchar rugido" color="#000" align="center" position="0 0 0.01"></a-text>
+      </a-plane>
     </a-nft>
     <a-entity camera></a-entity>
   </a-scene>
 </body>
+
+<script>
+  AFRAME.registerComponent('drag-rotate-component', {
+      schema: { speed: { default: 1 } },
+      init: function () {
+        this.ifMouseDown = false
+        this.previousX = null
+        this.el.sceneEl.addEventListener('touchdown', (e) => {
+          this.ifMouseDown = true
+          this.previousX = e.screenX
+        })
+        this.el.sceneEl.addEventListener('touchstart', () => {
+          this.ifMouseDown = false
+        })
+        this.el.sceneEl.addEventListener('touchend', (e) => {
+          if (this.ifMouseDown) {
+            const deltaX = e.screenX - this.previousX
+            this.el.object3D.rotation.y += deltaX * 0.005 * this.data.speed
+            this.previousX = e.screenX
+          }
+        })
+      }
+    })
+</script>
+
+<script>
+  AFRAME.registerComponent('markerhandler', {
+    init: function () {
+      const el = this.el
+      el.sceneEl.addEventListener('markerFound', () => {
+        const button = document.querySelector('#audio-button')
+        if (button) button.setAttribute('visible', 'true')
+
+        const loader = document.querySelector('.arjs-loader')
+        if (loader) loader.style.display = 'none'
+      })
+
+      // Manejo del clic en el botón de audio
+      el.sceneEl.addEventListener('click', (e) => {
+        const intersection = e.target
+        if (intersection && intersection.id === 'audio-button') {
+          const audio = document.querySelector('#rugido')
+          if (audio) audio.play().catch((e) => console.warn('Error audio:', e))
+        }
+      })
+    }
+  })
+</script>
