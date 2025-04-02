@@ -1,75 +1,30 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 
 <head>
-  <title>AR.js Precisión GPS</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AR.js A-Frame Location-based</title>
   <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
-  <script src="https://raw.githack.com/AR-js-org/AR.js/3.4.5/three.js/build/ar-threex-location-only.js"></script>
-  <script src="https://raw.githack.com/AR-js-org/AR.js/3.4.5/aframe/build/aframe-ar.js"></script>
-
-  <style>
-    #loader {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.8);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      font-size: 1.5em;
-    }
-  </style>
+  <script type='text/javascript'
+    src='https://raw.githack.com/AR-js-org/AR.js/3.4.5/three.js/build/ar-threex-location-only.js'></script>
+  <script type='text/javascript' src='https://raw.githack.com/AR-js-org/AR.js/3.4.5/aframe/build/aframe-ar.js'></script>
 </head>
-
-<body style="margin: 0; overflow: hidden;">
-  <div id="loader">📡 Buscando ubicación precisa...</div>
-
-  <a-scene embedded arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false"
+<body>
+  <a-scene vr-mode-ui="enabled: false" arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false"
     renderer="antialias: true; alpha: true">
     <a-assets>
       <img id="reboot" src="/images/reboot.png" />
     </a-assets>
-
+  
     <a-camera gps-new-camera="gpsMinDistance: 5"></a-camera>
+  
+    <!-- Cubo rojo -->
+    <a-entity material="color: red" geometry="primitive: box"
+      gps-new-entity-place="latitude: 28.141496; longitude: -15.430605" scale="10 10 10"></a-entity>
+  
+    <!-- Imagen -->
+    <a-image src="#reboot" gps-new-entity-place="latitude: 28.141582; longitude: -15.430726" scale="10 10 10"
+      rotation="0 0 0"></a-image>
   </a-scene>
-
-  <script>
-    let firstFix = false;
-
-    window.addEventListener('gps-camera-update-position', function (e) {
-      if (firstFix) return;
-
-      const { latitude, longitude, accuracy } = e.detail.position;
-
-      console.log('🎯 Ubicación:', latitude, longitude, 'Precisión:', accuracy, 'm');
-
-      if (accuracy && accuracy < 30) {
-        firstFix = true;
-        document.getElementById('loader').style.display = 'none';
-
-        const scene = document.querySelector('a-scene');
-
-        const img = document.createElement('a-image');
-        img.setAttribute('src', '#reboot');
-        img.setAttribute('gps-new-entity-place', `latitude: ${latitude + 0.00005}; longitude: ${longitude + 0.00007}`);
-        img.setAttribute('scale', '10 10 10');
-        img.setAttribute('rotation', '-90 0 0');
-        scene.appendChild(img);
-
-        const box = document.createElement('a-entity');
-        box.setAttribute('geometry', 'primitive: box');
-        box.setAttribute('material', 'color: red');
-        box.setAttribute('gps-new-entity-place', `latitude: ${latitude - 0.00005}; longitude: ${longitude - 0.00007}`);
-        box.setAttribute('scale', '10 10 10');
-        scene.appendChild(box);
-      }
-    });
-  </script>
 </body>
 
 </html>
