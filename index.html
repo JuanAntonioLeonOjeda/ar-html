@@ -9,38 +9,22 @@
   <script type='text/javascript' src='https://raw.githack.com/AR-js-org/AR.js/3.4.5/aframe/build/aframe-ar.js'></script>
 </head>
 <body>
-  <a-scene vr-mode-ui='enabled: false' arjs='sourceType: webcam; videoTexture: true; debugUIEnabled: false'
-    renderer='antialias: true; alpha: true'>
-    <a-camera gps-new-camera='gpsMinDistance: 5'></a-camera>
-    <a-entity material='color: red' geometry='primitive: box'
-      gps-new-entity-place="latitude: 28.1271825; longitude: -15.4412338" scale="10 10 10"></a-entity>
-    <a-image src="/images/reboot.png" gps-new-entity-place="latitude: 28.1271823; longitude: -15.4412336" scale="10 10 10"
-      rotation="-90 0 0">
-    </a-image>
-  </a-scene>
-<!-- <body style="margin: 0; overflow: hidden;">
-  <a-scene vr-mode-ui="enabled: false" renderer="antialias: true; alpha: true"
-    arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false">
+  <a-scene vr-mode-ui="enabled: false" arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false"
+    renderer="antialias: true; alpha: true">
+    <a-assets>
+      <img id="reboot" src="/images/reboot.png" />
+    </a-assets>
+  
     <a-camera gps-new-camera="gpsMinDistance: 5"></a-camera>
+  
+    <!-- Cubo rojo -->
+    <a-entity material="color: red" geometry="primitive: box"
+      gps-new-entity-place="latitude: 28.1271825; longitude: -15.4412338" scale="10 10 10"></a-entity>
+  
+    <!-- Imagen -->
+    <a-image src="#reboot" gps-new-entity-place="latitude: 28.1271823; longitude: -15.4412336" scale="10 10 10"
+      rotation="-90 0 0"></a-image>
   </a-scene>
-
-  <script>
-   navigator.geolocation.getCurrentPosition(function (pos) {
-      const latitude = pos.coords.latitude
-      const longitude = pos.coords.longitude
-      console.log('🌍 Ubicación detectada:', latitude, longitude)
-
-      const scene = document.querySelector('a-scene')
-      const box = document.createElement('a-entity')
-
-      box.setAttribute('gps-new-entity-place', `latitude: ${latitude}; longitude: ${longitude}`)
-      box.setAttribute('geometry', 'primitive: box')
-      box.setAttribute('material', 'color: red')
-      box.setAttribute('scale', '10 10 10')
-
-      scene.appendChild(box)
-    })
-  </script> -->
 </body>
 
 </html>
